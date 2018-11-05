@@ -25,7 +25,8 @@ with open("core_ids_normal.csv", "wb") as core_ids_normal, open("core_ids_weird.
             reader = RwlReader(package_copy)
 
             for row in reader.get_data(test=1): 
-                if row[7] == ' ' or row[7].isalpha():
-                    writer_normal.writerow([paleodata_file, row[:12].strip()])
-                else: 
-                    writer_weird.writerow([paleodata_file, row[:12].strip()])
+                if len(row) > 7: 
+                    if row[7] == ' ' or row[7].isalpha():
+                        writer_normal.writerow([paleodata_file, row[:12].strip()])
+                    else: 
+                        writer_weird.writerow([paleodata_file, row[:12].strip()])
