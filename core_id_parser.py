@@ -24,7 +24,6 @@ def core_id_parser_bf(s, start, end):
             if start < int(''.join([char] + year)) < end: 
                 year.insert(0, char)
             else: 
-                print "Not within"
                 break
         else: 
             year.insert(0, char)
@@ -51,7 +50,7 @@ def core_id_parser(row, start, end):
     else: 
         return core_id_parser_bf(row, start, end)
     
-    
+# NEED TO DEAL WITH boi508a12000
 
 # l = [
 #     "BRE150111840"
