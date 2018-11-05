@@ -22,7 +22,12 @@ with open("core_ids_normal.csv", "wb") as core_ids_normal, open("core_ids_weird.
                 'metadata': package['metadata']
             }
 
-            reader = RwlReader(package_copy)
+            try: 
+                reader = RwlReader(package_copy)
+            except Exception as e: 
+                print e, paleodata_file
+                # writer.writerow([paleodata_file, e])
+                continue
 
             for row in reader.get_data(test=1): 
                 if len(row) > 7: 
