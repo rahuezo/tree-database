@@ -18,7 +18,7 @@ def rwl_finder(path):
         if len(package['paleodata']) > 0: 
             yield package
         else: 
-            print "ERROR ", pdir, package
+            print "ERROR ", directory, package
             continue
 
 # path = fd.askdirectory(title="Choose directory with RWL files")
