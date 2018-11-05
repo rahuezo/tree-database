@@ -213,4 +213,4 @@ class RwlReader:
             
             if raw: 
                 return content
-            return content.split('\n')[start:end]
+            return filter(lambda x: len(x.strip()) > 0, map(lambda x: x.strip(), content.split('\n')[start:end]))
