@@ -100,8 +100,11 @@ if not all([os.path.exists('species_dict.pkl'), os.path.exists('cores_dict.pkl')
             for row in rwl_reader.get_data(): 
                 site_id = row[0]
                 species_id = row[3]
-                core_id = row[-3]
-                
+                core_id = row[-5]
+
+                # (self.site_id, self.site_name, self.species, self.species_id, self.elevation, 
+#                                 self.coordinates, self.time_unit, self.year_range, self.year_bp_range, core_id, year, 
+#                                 round(ring_width*self.units, 6), decade, row[:12])
                 
                 if core_id not in core_ids: 
                     core_ids[core_id] = (species_id, site_id)
