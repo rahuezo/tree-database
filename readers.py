@@ -169,7 +169,11 @@ class RwlReader:
                 yield row
         else:         
             for row in paleodata_rows: 
-                core_id, decade, data = split_row(row)
+                try: 
+                    core_id, decade, data = split_row(row)
+                except: 
+                    print self.paleodata_file, row
+                    break 
 
                 # print core_id, decade, data
                 for i, ring_width in enumerate(data):
