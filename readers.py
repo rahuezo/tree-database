@@ -1,3 +1,4 @@
+from core_id_parser import core_id_parser
 import re, codecs, chardet, json
 
 CENTI_MM = 0.01
@@ -155,8 +156,10 @@ class RwlReader:
         paleodata_rows = self.get_content(self.paleodata_file, start=3)
 
         def split_row(row): 
-            core_id = row[:6].strip().lower() # row[:8] -> row[:6]
-            decade = row[6:12].strip()  # row[8:12] -> row[6:12]
+            # core_id = row[:6].strip().lower() # row[:8] -> row[:6]
+            # decade = row[6:12].strip()  # row[8:12] -> row[6:12]
+            start, end = map(int, self.year_range)
+            core_id, decade, method = core_id_parser(row[:12], start, end)
             data = row[12:].strip().split()
             
             return core_id, decade, data
@@ -165,8 +168,10 @@ class RwlReader:
             for row in paleodata_rows: 
                 yield row
         else:         
-            for row in paleodata_rows:  
+            for row in paleodata_rows: 
                 core_id, decade, data = split_row(row)
+
+                # print core_id, decade, data
                 for i, ring_width in enumerate(data):
                     try:  
                         ring_width = int(ring_width)
@@ -182,7 +187,8 @@ class RwlReader:
                     if ring_width != self.missing_value_id:             
                         year = decade + i
                         yield (self.site_id, self.site_name, self.species, self.species_id, self.elevation, 
-                                self.coordinates, self.time_unit, self.year_range, self.year_bp_range, core_id, year, round(ring_width*self.units, 6), decade), row
+                                self.coordinates, self.time_unit, self.year_range, self.year_bp_range, core_id, year, 
+                                round(ring_width*self.units, 6), decade, row[:12])
             
     @staticmethod
     def get_units(content): 

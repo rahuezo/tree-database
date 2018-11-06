@@ -1,5 +1,5 @@
 from finders import rwl_finder
-from readers import RwlReader
+# from readers import RwlReader
 
 import tkFileDialog as fd
 import csv, time
@@ -30,7 +30,7 @@ def core_id_parser_bf(s, start, end):
 
     year = ''.join(year)
     core_id = s[:s.index(year)]
-    return core_id, year, 4
+    return core_id, year, 5
 
 def core_id_parser(row, start, end): 
     if row[7] == "." or row[7] == "0" or row[7].isalpha() or row[7] == " ":         
@@ -46,19 +46,24 @@ def core_id_parser(row, start, end):
         year = "-{}".format(row.split("-")[-1])
         core_id = row[:row.index(year)].strip()
         return core_id, year, 3
-
+    elif row[7].isdigit() and row[7:].isdigit(): 
+        partial_row = row[7:]
+        if start < int(partial_row) < end: 
+            return row[:7], partial_row, 4
+        else:
+            return row[:8], partial_row[1:], 4
     else: 
         return core_id_parser_bf(row, start, end)
     
 # NEED TO DEAL WITH boi508a12000
 
 # l = [
-#     "BRE150111840"
+#     " 9_Col  1800"
 # ]
 
 
 # for i in l: 
-#     print core_id_parser(i, 1808, 1993)
+#     print core_id_parser(i, 476, 1999)
 
 
 
@@ -107,41 +112,41 @@ def core_id_parser(row, start, end):
 
 
 
-rwl_dir = fd.askdirectory(title="Choose directory with RWLs")
-# rwl_dir = r"E:\gdp_temperature_project\results\treering_data_width"
+# rwl_dir = fd.askdirectory(title="Choose directory with RWLs")
+# # rwl_dir = r"E:\gdp_temperature_project\results\treering_data_width"
 
-# with open("core_ids_normal.csv", "wb") as core_ids_normal, open("core_ids_weird.csv", "wb") as core_ids_weird:
-with open("core_id_parser_{}.csv".format(time.time()), "wb") as out_csv:
-    writer = csv.writer(out_csv, delimiter=",")
-    # writer_normal = csv.writer(core_ids_normal, delimiter=",")
-    # writer_weird = csv.writer(core_ids_weird, delimiter=",")
-    packages = [i for i in rwl_finder(rwl_dir)]
-    for i, package in enumerate(packages): 
-        print "{} out of {}".format(i + 1, len(packages))
-        package_paleodata_files = package['paleodata']
+# # with open("core_ids_normal.csv", "wb") as core_ids_normal, open("core_ids_weird.csv", "wb") as core_ids_weird:
+# with open("core_id_parser_{}.csv".format(time.time()), "wb") as out_csv:
+#     writer = csv.writer(out_csv, delimiter=",")
+#     # writer_normal = csv.writer(core_ids_normal, delimiter=",")
+#     # writer_weird = csv.writer(core_ids_weird, delimiter=",")
+#     packages = [i for i in rwl_finder(rwl_dir)]
+#     for i, package in enumerate(packages): 
+#         print "{} out of {}".format(i + 1, len(packages))
+#         package_paleodata_files = package['paleodata']
 
-        for paleodata_file in package_paleodata_files: 
-            package_copy = {
-                'correlation': package['correlation'], 
-                'paleodata': [paleodata_file],
-                'metadata': package['metadata']
-            }
+#         for paleodata_file in package_paleodata_files: 
+#             package_copy = {
+#                 'correlation': package['correlation'], 
+#                 'paleodata': [paleodata_file],
+#                 'metadata': package['metadata']
+#             }
 
-            try: 
-                reader = RwlReader(package_copy)
-            except Exception as e: 
-                print "RWL reader error", e, paleodata_file
-                # writer.writerow([paleodata_file, e])
-                continue
+#             try: 
+#                 reader = RwlReader(package_copy)
+#             except Exception as e: 
+#                 print "RWL reader error", e, paleodata_file
+#                 # writer.writerow([paleodata_file, e])
+#                 continue
 
-            for row in reader.get_data(test=1): 
-                try: 
-                    row = row[:12]
-                    start, end = map(int, reader.year_range)
+#             for row in reader.get_data(test=1): 
+#                 try: 
+#                     row = row[:12]
+#                     start, end = map(int, reader.year_range)
 
-                    core_id, year, method = core_id_parser(row, start, end)
+#                     core_id, year, method = core_id_parser(row, start, end)
 
-                    writer.writerow([paleodata_file, row, core_id, year, method])
+#                     writer.writerow([paleodata_file, row, core_id, year, method])
 
-                except Exception as e: 
-                    print "core_id_parser error", e
+#                 except Exception as e: 
+#                     print "core_id_parser error", e
