@@ -217,20 +217,22 @@ for package in rwl_finder(rwls_path):
 #                                 round(ring_width*self.units, 6), decade, row[:12])
 
             for row in rwl_reader.get_data():
-                # print row
-                core_id = row[-5]
-                site_id = row[0]
-                time_unit = row[-8]
-                year = row[-2]
-                first_year, last_year = row[-7]
-                first_year_bp, last_year_bp = row[-6]
-                ring_width = row[-3]
-                raw_partial_row = row[-1]
+                try: 
+                    core_id = row[-5]
+                    site_id = row[0]
+                    time_unit = row[-8]
+                    year = row[-2]
+                    first_year, last_year = row[-7]
+                    first_year_bp, last_year_bp = row[-6]
+                    ring_width = row[-3]
+                    raw_partial_row = row[-1]
 
-                values = (core_id, site_id, time_unit, year, first_year, last_year, first_year_bp, last_year_bp, ring_width, raw_partial_row)
+                    values = (core_id, site_id, time_unit, year, first_year, last_year, first_year_bp, last_year_bp, ring_width, raw_partial_row)
 
-                db.insert("""INSERT INTO {} VALUES(NULL,?,?,?,?,?,?,?,?,?,?)""".format(observations_tb), values)
-
+                    db.insert("""INSERT INTO {} VALUES(NULL,?,?,?,?,?,?,?,?,?,?)""".format(observations_tb), values)
+                except Exception as e: 
+                    print e
+                    continue            
             db.connection.commit()        
                 
             elapsed_time = time.time() - start_time
