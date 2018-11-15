@@ -221,7 +221,7 @@ for package in rwl_finder(rwls_path):
                     core_id = row[-5]
                     site_id = row[0]
                     time_unit = row[-8]
-                    year = row[-2]
+                    year = row[-4]
                     first_year, last_year = row[-7]
                     first_year_bp, last_year_bp = row[-6]
                     ring_width = row[-3]
